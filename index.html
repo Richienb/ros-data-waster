@@ -153,13 +153,6 @@
                         progressbar.progress = 1.0;
                     }
                 }
-                if (speed < 1) {
-                    setTimeout(function() {
-                        snackbar.show({
-                            message: "Your network may not be fast enough to efficiently waste your data."
-                        });
-                    }, 5000);
-                }
                 if (wasted >= 1048576 * 1024 * 100) {
                     snackbar.show({
                         message: "Data wasted reached internal limit."
