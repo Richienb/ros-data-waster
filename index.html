@@ -39,10 +39,14 @@
         .mdc-text-field {
             width: 100%;
         }
+
+        body > main > label {
+            padding-left: 8px;
+        }
     </style>
 
     <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
 
 </head>
 
@@ -51,19 +55,41 @@
     <main class="mdc-typography">
         <h1 class="mdc-typography--headline1">ROS Data Waster</h1>
         <p class="mdc-typography--body1">The most straightforward way to waste all of your data.</p>
-        <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
-            <input type="number" min="0" id="goal" value="0" class="mdc-text-field__input" required>
+        <div class="mdc-switch mdc-switch--checked" data-mdc-auto-init="MDCSwitch">
+            <div class="mdc-switch__track"></div>
+            <div class="mdc-switch__thumb-underlay">
+                <div class="mdc-switch__thumb">
+                    <input type="checkbox" id="basic-switch" class="mdc-switch__native-control" role="switch" checked>
+                </div>
+            </div>
+        </div>
+        <label for="basic-switch">Waste Unlimited Data</label>
+        <br><br>
+        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--disabled" data-mdc-auto-init="MDCTextField">
+            <input type="number" min="1" id="goal" value="1" class="mdc-text-field__input">
             <div class="mdc-notched-outline">
                 <div class="mdc-notched-outline__leading"></div>
                 <div class="mdc-notched-outline__notch">
-                    <label for="goal" class="mdc-floating-label">MBs of data to waste (0 is infinite)</label>
+                    <label for="goal" class="mdc-floating-label">MBs of data to waste</label>
                 </div>
                 <div class="mdc-notched-outline__trailing"></div>
             </div>
         </div>
         <br>
         <br>
-        <button id="btn" class="mdc-button mdc-button--outlined" data-mdc-auto-init="MDCRipple">Start</button>
+        <button id="btn" class="mdc-button mdc-button--outlined" data-mdc-auto-init="MDCRipple">Start Wasting</button>
+        <br>
+        <br>
+        <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed">
+            <div class="mdc-linear-progress__buffering-dots"></div>
+            <div class="mdc-linear-progress__buffer"></div>
+            <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                <span class="mdc-linear-progress__bar-inner"></span>
+            </div>
+            <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                <span class="mdc-linear-progress__bar-inner"></span>
+            </div>
+        </div>
         <p class="mdc-typography--body1">
             Megabytes wasted: <span id="byte">0</span>
         </p>
@@ -89,6 +115,7 @@
         window.mdc.autoInit();
 
         var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('.mdc-snackbar'));
+        var progressbar = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
 
         var running = false;
         var wasted = 0;
@@ -100,7 +127,16 @@
         var v = 2;
         var int = null;
         var stopped = false;
+
+        var speed = 0;
         var url = "";
+
+        var getmbs = function() {
+            if (document.querySelector('.mdc-switch').MDCSwitch.checked === true) {
+                return 0;
+            }
+            return parseInt($("#goal").val());
+        }
 
         var download = function download(id) {
             if (xhr[id] && xhr[id].status == 200) {
@@ -109,13 +145,32 @@
                 speed = wasted / (new Date().getTime() - time) * 1000;
                 speed = (0 | speed * 100 / 1048576) / 100;
                 $('#speed').html(speed);
+                if (getmbs() !== 0) {
+                    if (parseInt($("#byte").html()) / parseInt($("#goal").val()) < 1.0) {
+                        progressbar.progress = parseInt($("#byte").html()) / parseInt($("#goal").val());
+                    } else {
+                        progressbar.progress = 1.0
+                    }
+
+                }
                 if (speed < 1) {
+                    setTimeout(
+                        function() {
+                            snackbar.show({
+                                message: "Your network may not be fast enough to efficiently waste your data."
+                            });
+                        }, 5000);
+                }
+                if (wasted >= 1048576 * 1024 * 100) {
                     snackbar.show({
-                        message: "Your network is not fast enough to efficiently waste your data."
+                        message: "Data wasted reached internal limit."
                     });
                     stop();
                 }
-                if (wasted >= 1048576 * 1024 * 100 || goal !== 0 && wasted >= goal * 1048576) {
+                if (goal !== 0 && wasted >= goal * 1048576) {
+                    snackbar.show({
+                        message: "The specified amount of data was wasted."
+                    });
                     stop();
                 }
             }
@@ -132,18 +187,23 @@
 
         var stop = function stop() {
             running = false;
-            document.querySelector('.mdc-text-field').MDCTextField.disabled = false;
-            $('#btn').html('Start');
+            document.querySelector('.mdc-text-field').MDCTextField.disabled = document.querySelector('.mdc-switch').MDCSwitch.checked;
+            document.querySelector('.mdc-switch').MDCSwitch.disabled = false;
+            progressbar.close()
+            $('#btn').html('Start Wasting');
         };
 
         var start = function start() {
             document.querySelector('.mdc-text-field').MDCTextField.disabled = true;
-            $('#btn').html('Stop');
+            document.querySelector('.mdc-switch').MDCSwitch.disabled = true;
+            progressbar.determinate = getmbs() !== 0;
+            progressbar.open()
+            $('#btn').html('Stop Wasting');
             running = true;
             wasted = 0;
             xhr = [];
             time = new Date().getTime();
-            goal = parseInt($('#goal').val());
+            goal = getmbs();
             for (var i = 0; i < threads; i++) {
                 download(i);
             }
@@ -153,6 +213,17 @@
             $("#btnSubmit").attr("disabled", true);
             $("#btn").attr("disabled", !document.querySelector("input").validity.valid);
         });
+
+        $('#basic-switch').on('click', function() {
+            document.querySelector('.mdc-text-field').MDCTextField.disabled = document.querySelector('.mdc-switch').MDCSwitch.checked;
+            document.querySelector('.mdc-text-field').MDCTextField.required = !document.querySelector('.mdc-switch').MDCSwitch.checked;
+            if (document.querySelector('.mdc-switch').MDCSwitch.checked) {
+                progressbar.determinate = false
+            } else {
+                progressbar.determinate = true
+            }
+
+        })
 
         $('#btn').on('click', function() {
             if (running == false && stopped == false) {
