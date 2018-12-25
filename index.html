@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="theme-color" content="#3F51B5">
+
+    <title>ROS Data Waster</title>
+    <meta name="description" content="The most straightforward way to waste all of your data.">
+
+    <link rel="shortcut icon" href="favicon.ico">
+
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@0.42.1/dist/material-components-web.min.css" integrity="sha384-ODQ5FoGYnYgYzQTCJd2Q1XMY45hxqRtNhoquasG83tttLZg59QsDmcA2ZPO77D3I" crossorigin="anonymous">
+
+    <style>
+        :root {
+            --mdc-theme-primary: #3f51b5;
+            --mdc-theme-secondary: #f44336;
+            --mdc-theme-on-primary: #ffffff;
+            --mdc-theme-on-secondary: #ffffff;
+        }
+
+        :root body {
+            background-color: #3f51b5;
+        }
+
+        :root body main {
+            background-color: #ffffff;
+            border-radius: 4px;
+            margin: 20px;
+            min-width: calc(100vw - 80px);
+            min-height: calc(100vh - 80px);
+            padding: 20px;
+        }
+
+        .mdc-text-field {
+            width: 100%;
+        }
+    </style>
+
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:300,400,500'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+</head>
+
+<body>
+
+    <main class="mdc-typography">
+        <h1 class="mdc-typography--headline1">ROS Data Waster</h1>
+        <p class="mdc-typography--body1">The most straightforward way to waste all of your data.</p>
+        <div class="mdc-text-field mdc-text-field--outlined" data-mdc-auto-init="MDCTextField">
+            <input type="number" min="0" id="goal" value="0" class="mdc-text-field__input" required>
+            <div class="mdc-notched-outline">
+                <div class="mdc-notched-outline__leading"></div>
+                <div class="mdc-notched-outline__notch">
+                    <label for="goal" class="mdc-floating-label">MBs of data to waste (0 is infinite)</label>
+                </div>
+                <div class="mdc-notched-outline__trailing"></div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <button id="btn" class="mdc-button mdc-button--outlined" data-mdc-auto-init="MDCRipple">Start</button>
+        <p class="mdc-typography--body1">
+            Megabytes wasted: <span id="byte">0</span>
+        </p>
+        <p class="mdc-typography--body1">
+            Megabytes wasted per second: <span id="speed">0</span>
+        </p>
+
+        <div class="mdc-snackbar mdc-snackbar--align-start" aria-live="assertive" aria-atomic="true" aria-hidden="true">
+            <div class="mdc-snackbar__text"></div>
+            <div class="mdc-snackbar__action-wrapper">
+                <button type="button" class="mdc-snackbar__action-button"></button>
+            </div>
+        </div>
+    </main>
+
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js" integrity="sha256-1eSvllkLdrfxD6G8RGF9h+mQuD93Af5+GdPBMNc7uMQ=" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/material-components-web@0.42.1/dist/material-components-web.min.js" integrity="sha384-DHa3zZXZi8Wekuo3REdum8U9soLiSgEDdaS+VXgHXbinVoRirw7POM55EsbumY2k" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <script>
+        'use strict';
+
+        window.mdc.autoInit();
+
+        var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('.mdc-snackbar'));
+
+        running = false;
+        wasted = 0;
+        xhr = [];
+        threads = 8;
+        time = 0;
+        goal = 0;
+        chunk = 800000;
+        v = 2;
+        int = null;
+        stopped = false;
+
+        var download = function download(id) {
+            if (xhr[id] && xhr[id].status == 200) {
+                wasted += chunk;
+                $('#byte').html((0 | wasted * 100 / 1048576) / 100);
+                speed = wasted / (new Date().getTime() - time) * 1000;
+                speed = (0 | speed * 100 / 1048576) / 100;
+                $('#speed').html(speed);
+                if (speed < 1) {
+                    snackbar.show({
+                        message: "Your network is not fast enough to efficiently waste your data."
+                    });
+                    stop();
+                }
+                if (wasted >= 1048576 * 1024 * 100 || goal !== 0 && wasted >= goal * 1048576) {
+                    stop();
+                }
+            }
+            if (running == true) {
+                url = "./dummy" + '?' + Math.random();
+                xhr[id] = $.ajax({
+                    url: url,
+                    complete: function complete(data) {
+                        download(id);
+                    }
+                });
+            }
+        };
+
+        var stop = function stop() {
+            running = false;
+            document.querySelector('.mdc-text-field').MDCTextField.disabled = false;
+            $('#btn').html('Start');
+        };
+
+        var start = function start() {
+            document.querySelector('.mdc-text-field').MDCTextField.disabled = true;
+            $('#btn').html('Stop');
+            running = true;
+            wasted = 0;
+            xhr = [];
+            time = new Date().getTime();
+            goal = parseInt($('#goal').val());
+            for (var i = 0; i < threads; i++) {
+                download(i);
+            }
+        };
+
+        $('input').on('input', function() {
+            $("#btnSubmit").attr("disabled", true);
+            $("#btn").attr("disabled", !document.querySelector("input").validity.valid);
+        });
+
+        $('#btn').on('click', function() {
+            if (running == false && stopped == false) {
+                start();
+            } else if (stopped == false) {
+                stop();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
