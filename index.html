@@ -90,16 +90,16 @@
 
         var snackbar = new mdc.snackbar.MDCSnackbar(document.querySelector('.mdc-snackbar'));
 
-        running = false;
-        wasted = 0;
-        xhr = [];
-        threads = 8;
-        time = 0;
-        goal = 0;
-        chunk = 800000;
-        v = 2;
-        int = null;
-        stopped = false;
+        var running = false;
+        var wasted = 0;
+        var xhr = [];
+        var threads = 8;
+        var time = 0;
+        var goal = 0;
+        var chunk = 800000;
+        var v = 2;
+        var int = null;
+        var stopped = false;
 
         var download = function download(id) {
             if (xhr[id] && xhr[id].status == 200) {
