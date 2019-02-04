@@ -48,7 +48,8 @@
             width: 100%;
         }
         
-        :root body .main-content .option--unlimited {
+        :root body .main-content .option--unlimited,
+        :root body .main-content .option--precise {
             padding-right: 8px;
         }
         
@@ -65,7 +66,6 @@
 </head>
 
 <body>
-
     <div class="ribbon mdc-elevation--z4"></div>
     <main class="main-content mdc-typography mdc-elevation--z8">
         <h1 class="mdc-typography--headline2">ROS Data Waster</h1>
@@ -74,11 +74,22 @@
             <div class="mdc-switch__track"></div>
             <div class="mdc-switch__thumb-underlay">
                 <div class="mdc-switch__thumb">
-                    <input type="checkbox" id="basic-switch" class="mdc-switch__native-control" role="switch" checked>
+                    <input type="checkbox" id="basic-switch-1" class="mdc-switch__native-control" role="switch" checked>
                 </div>
             </div>
         </div>
-        <label for="basic-switch">Waste Unlimited Data</label>
+        <label for="basic-switch-1">Waste Unlimited Data</label>
+        <br>
+        <br>
+        <div class="option--precise mdc-switch" data-mdc-auto-init="MDCSwitch">
+            <div class="mdc-switch__track"></div>
+            <div class="mdc-switch__thumb-underlay">
+                <div class="mdc-switch__thumb">
+                    <input type="checkbox" id="basic-switch-2" class="mdc-switch__native-control" role="switch">
+                </div>
+            </div>
+        </div>
+        <label for="basic-switch-2">Precise Wasting</label>
         <br>
         <br>
         <div class="option--mbs mdc-text-field mdc-text-field--outlined mdc-text-field--disabled" data-mdc-auto-init="MDCTextField">
@@ -171,7 +182,8 @@
                 $(".output--speed").html(speed);
                 if (
                     getmbs() !== 0 &&
-                    parseInt($(".output--byte").html()) / parseInt(document.querySelector(".option--mbs").MDCTextField.value) <
+                    parseInt($(".output--byte").html()) /
+                    parseInt(document.querySelector(".option--mbs").MDCTextField.value) <
                     1.0) {
                     document.querySelector(".output--progress").MDCLinearProgress.progress =
                         parseInt($(".output--byte").html()) /
@@ -205,6 +217,7 @@
                 ".option--unlimited").
             MDCSwitch.checked;
             document.querySelector(".option--unlimited").MDCSwitch.disabled = false;
+            document.querySelector(".option--precise").MDCSwitch.disabled = false;
             document.querySelector(".output--progress").MDCLinearProgress.close();
             $(".option--waste > .mdc-fab__label").html("Start Wasting");
             $(".option--waste > .mdc-fab__icon").html(
@@ -213,8 +226,13 @@
         }
 
         function start() {
+            threads = document.querySelector(".option--precise").MDCSwitch.checked ?
+                1 :
+                8;
             document.querySelector(".output--progress").MDCLinearProgress.progress = 0.0;
             document.querySelector(".option--mbs").MDCTextField.disabled = true;
+            document.querySelector(".option--unlimited").MDCSwitch.disabled = true;
+            document.querySelector(".option--precise").MDCSwitch.disabled = true;
             document.querySelector(".option--unlimited").MDCSwitch.disabled = true;
             document.querySelector(".output--progress").MDCLinearProgress.determinate =
                 getmbs() !== 0;
