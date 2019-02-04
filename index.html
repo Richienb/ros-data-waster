@@ -229,7 +229,6 @@
             time = new Date().getTime();
             goal = getmbs();
             for (var i = 0; i < threads; i++) {
-                if (window.CP.shouldStopExecution(0)) break;
                 download(i);
             }
             window.CP.exitedLoop(0);
