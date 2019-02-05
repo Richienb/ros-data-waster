@@ -48,9 +48,9 @@
             width: 100%;
         }
         
-        :root body .main-content .option--unlimited,
-        :root body .main-content .option--precise {
-            padding-right: 8px;
+        :root body .main-content label[for="option--unlimited-input"],
+        :root body .main-content label[for="option--precise-input"] {
+            margin-left: 10px;
         }
         
         :root body .output--progress {
@@ -74,22 +74,22 @@
             <div class="mdc-switch__track"></div>
             <div class="mdc-switch__thumb-underlay">
                 <div class="mdc-switch__thumb">
-                    <input type="checkbox" id="basic-switch-1" class="mdc-switch__native-control" role="switch" checked>
+                    <input type="checkbox" id="option--unlimited-input" class="mdc-switch__native-control" role="switch" checked>
                 </div>
             </div>
         </div>
-        <label for="basic-switch-1">Waste Unlimited Data</label>
+        <label for="option--unlimited-input">Waste Unlimited Data</label>
         <br>
         <br>
         <div class="option--precise mdc-switch" data-mdc-auto-init="MDCSwitch">
             <div class="mdc-switch__track"></div>
             <div class="mdc-switch__thumb-underlay">
                 <div class="mdc-switch__thumb">
-                    <input type="checkbox" id="basic-switch-2" class="mdc-switch__native-control" role="switch">
+                    <input type="checkbox" id="option--precise-input" class="mdc-switch__native-control" role="switch">
                 </div>
             </div>
         </div>
-        <label for="basic-switch-2">Precise Wasting</label>
+        <label for="option--precise-input">Precise Wasting</label>
         <br>
         <br>
         <div class="option--mbs mdc-text-field mdc-text-field--outlined mdc-text-field--disabled" data-mdc-auto-init="MDCTextField">
