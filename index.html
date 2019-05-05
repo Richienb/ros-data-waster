@@ -13,32 +13,51 @@
 
     <link rel="shortcut icon" href="favicon.ico">
 
-    <link rel="stylesheet" href="https://unpkg.com/material-components-web@1.1.1/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.0.0/material-components-web.min.css">
 
     <style>
         body {
             --mdc-theme-primary: #3f51b5;
             --mdc-theme-secondary: #f44336;
-            --mdc-theme-on-primary: #ffffff;
-            --mdc-theme-on-secondary: #ffffff;
             background-color: #fafafa;
         }
         
         body .ribbon {
             top: 0;
             z-index: -1;
-            background-color: #3f51b5;
+            background-color: var(--mdc-theme-primary, #6200ee);
             width: 100%;
             height: 10rem;
             position: absolute;
         }
         
         body .main-content {
-            background-color: #ffffff;
+            background-color: white;
             border-radius: 4px;
             margin: 1.5rem;
             padding: 2rem;
             min-height: calc(100vh - 7rem);
+        }
+        
+        body .main-content .option__mbs {
+            width: 100%;
+            margin-top: 32px;
+        }
+        
+        body .main-content .mdc-switch__label {
+            margin-left: 10px;
+        }
+        
+        body .main-content .option__threads-title {
+            margin-bottom: 0;
+        }
+        
+        body .main-content img {
+            max-width: 100%;
+        }
+        
+        body .main-content .mdc-button.mdc-button--raised {
+            background-color: var(--mdc-theme-secondary, #018786);
         }
         
         body .main-content .theme-toggle {
@@ -66,7 +85,7 @@
             float: right;
             border-radius: 6px;
             box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-            font-family: Roboto, Helvetica, sans-serif;
+            font-family: Roboto, sans-serif;
             line-height: 28px;
             padding: 8px;
             box-sizing: border-box;
@@ -116,23 +135,14 @@
             text-decoration: none;
         }
         
-        body .main-content .option--mbs {
-            width: 100%;
-            margin-top: 32px;
-        }
-        
-        body .main-content .mdc-switch__label {
-            margin-left: 10px;
-        }
-        
-        body .main-content .option--threads__title {
-            margin-bottom: 0;
-        }
-        
-        body .output--progress {
+        body .output__progress {
             bottom: 0px;
             height: 8px;
             position: fixed;
+        }
+        
+        body .full-width {
+            width: 100%;
         }
         
         body.setting--dark {
@@ -142,42 +152,44 @@
             --mdc-theme-text-icon-on-background: white;
         }
         
+        body.setting--dark::-webkit-scrollbar {
+            background-color: #505050;
+        }
+        
         body.setting--dark .main-content {
             color: white;
             background-color: #303030;
         }
         
-        body.setting--dark .main-content .mdc-text-field:not(.mdc-text-field--disabled) .mdc-text-field__input,
-        body.setting--dark .main-content .mdc-text-field:not(.mdc-text-field--disabled) .mdc-floating-label {
-            color: white;
-        }
-        
-        body.setting--dark .main-content .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
-        body.setting--dark .main-content .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
-        body.setting--dark .main-content .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
-            border-color: white;
-        }
-        
-        body.setting--dark .main-content #carbonads .carbon-text {
+        body.setting--dark .mdc-select__selected-text,
+        body.setting--dark .mdc-text-field__input,
+        body.setting--dark .mdc-floating-label,
+        body.setting--dark #carbonads .carbon-text {
             color: white !important;
         }
         
-        body.setting--dark .main-content a {
-            color: #5c6bc0;
-        }
-        
-        body.setting--dark .main-content::-moz-selection {
-            background-color: #c5cae9;
-            color: black;
-        }
-        
-        body.setting--dark .main-content::selection {
-            background-color: #c5cae9;
-            color: black;
+        body.setting--dark .mdc-notched-outline__leading,
+        body.setting--dark .mdc-notched-outline__notch,
+        body.setting--dark .mdc-notched-outline__trailing {
+            border-color: white !important;
         }
         
         body.setting--dark .mdc-linear-progress__buffer {
             background-color: #404040;
+        }
+        
+        body.setting--dark a {
+            color: #5c6bc0;
+        }
+        
+        body.setting--dark::-moz-selection {
+            background-color: #c5cae9;
+            color: black;
+        }
+        
+        body.setting--dark::selection {
+            background-color: #c5cae9;
+            color: black;
         }
         
         body.setting--animate-colours {
@@ -197,6 +209,41 @@
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             transition-property: background-color, color;
         }
+        
+        body::-webkit-scrollbar {
+            border-radius: 100px;
+            background-color: transparent;
+            width: 8px;
+            height: 8px;
+        }
+        
+        body::-webkit-scrollbar-button {
+            height: 0;
+            width: 0;
+        }
+        
+        body::-webkit-scrollbar-corner {
+            background-color: transparent;
+        }
+        
+        body::-webkit-scrollbar-thumb {
+            border-radius: 100px;
+            background-color: rgba(0, 0, 0, 0.2);
+            min-height: 28px;
+        }
+        
+        body::-webkit-scrollbar-thumb:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        
+        body::-webkit-scrollbar-thumb:active {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        body::-webkit-scrollbar-track {
+            background-clip: padding-box;
+            border-width: 0 0 0 4px;
+        }
     </style>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
@@ -209,7 +256,7 @@
     <main class="main-content mdc-typography mdc-elevation--z8">
         <script async src="https://cdn.carbonads.com/carbon.js?serve=CK7I6K3E&amp;placement=wwwrichie-bendallml" id="_carbonads_js"></script>
         <button class="theme-toggle mdc-fab mdc-fab--mini" aria-label="Toggle Theme Settings" data-mdc-auto-init="MDCRipple">
-            <svg class="theme-toggle--svg mdc-fab__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+            <svg class="theme-toggle__svg mdc-fab__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="none" d="M0 0h24v24H0V0z" />
                 <path d="M11 7l-3.2 9h1.9l.7-2h3.2l.7 2h1.9L13 7h-2zm-.15 5.65L12 9l1.15 3.65h-2.3zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48z" />
             </svg>
@@ -217,16 +264,16 @@
         <h1 class="mdc-typography--headline2">ROS Data Waster</h1>
         <p class="mdc-typography--body1">The most straightforward way to waste all of your data.</p>
         <br>
-        <div class="option--unlimited mdc-switch mdc-switch--checked" data-mdc-auto-init="MDCSwitch">
+        <div class="option__unlimited mdc-switch mdc-switch--checked" data-mdc-auto-init="MDCSwitch">
             <div class="mdc-switch__track"></div>
             <div class="mdc-switch__thumb-underlay">
                 <div class="mdc-switch__thumb">
-                    <input type="checkbox" id="option--unlimited-input" class="mdc-switch__native-control" role="switch" checked>
+                    <input type="checkbox" class="mdc-switch__native-control" role="switch" checked>
                 </div>
             </div>
         </div>
         <label class="mdc-switch__label" for="option--unlimited-input">Waste Unlimited Data</label>
-        <div class="option--mbs mdc-text-field mdc-text-field--outlined mdc-text-field--disabled" data-mdc-auto-init="MDCTextField">
+        <div class="option__mbs mdc-text-field mdc-text-field--outlined mdc-text-field--disabled" data-mdc-auto-init="MDCTextField">
             <input type="number" min="1" id="goal" value="1" class="mdc-text-field__input" disabled>
             <div class="mdc-notched-outline">
                 <div class="mdc-notched-outline__leading"></div>
@@ -238,8 +285,8 @@
         </div>
         <br>
         <br>
-        <p class="option--threads__title mdc-typography--body2">Download threads (higher is for faster wasting, lower is for more precision)</p>
-        <div class="option--threads mdc-slider mdc-slider--discrete mdc-slider--display-markers" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="20" aria-valuenow="8" aria-label="Select Value" data-mdc-auto-init="MDCSlider">
+        <p class="option__threads-title mdc-typography--body2">Download threads (higher is for faster wasting, lower is for more precision)</p>
+        <div class="option__threads mdc-slider mdc-slider--discrete mdc-slider--display-markers" tabindex="0" role="slider" aria-valuemin="1" aria-valuemax="20" aria-valuenow="8" aria-label="Select Value" data-mdc-auto-init="MDCSlider">
             <div class="mdc-slider__track-container">
                 <div class="mdc-slider__track"></div>
                 <div class="mdc-slider__track-marker-container"></div>
@@ -255,7 +302,7 @@
             </div>
         </div>
         <br>
-        <button class="option--waste waste-button mdc-fab mdc-fab--extended" data-mdc-auto-init="MDCRipple">
+        <button class="option__waste mdc-fab mdc-fab--extended" data-mdc-auto-init="MDCRipple">
             <svg class="mdc-fab__icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                 <path fill="none" d="M0 0h24v24H0V0z" />
                 <path d="M10 8.64L15.27 12 10 15.36V8.64M8 5v14l11-7L8 5z" />
@@ -272,7 +319,7 @@
                 </svg>
                 <span class="mdc-list-item__text">
       <span class="mdc-list-item__primary-text">Megabytes wasted</span>
-                <span class="mdc-list-item__secondary-text"><span class="output--byte">0.00</span> Mbs</span>
+                <span class="mdc-list-item__secondary-text"><span class="output__wasted">0.00</span> Mbs</span>
                 </span>
             </li>
             <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
@@ -282,7 +329,7 @@
                 </svg>
                 <span class="mdc-list-item__text">
       <span class="mdc-list-item__primary-text">Data wasted per second</span>
-                <span class="mdc-list-item__secondary-text"><span class="output--speed">0.00</span> Mbs/s</span>
+                <span class="mdc-list-item__secondary-text"><span class="output__speed">0.00</span> Mbs/s</span>
                 </span>
             </li>
             <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
@@ -292,11 +339,11 @@
                 </svg>
                 <span class="mdc-list-item__text">
       <span class="mdc-list-item__primary-text">Time running</span>
-                <span class="output--seconds mdc-list-item__secondary-text">0 seconds</span>
+                <span class="output__time mdc-list-item__secondary-text">0 seconds</span>
                 </span>
             </li>
         </ul>
-        <div class="snackbar--done mdc-snackbar mdc-snackbar--leading" data-mdc-auto-init="MDCSnackbar">
+        <div class="snackbar__done mdc-snackbar mdc-snackbar--leading" data-mdc-auto-init="MDCSnackbar">
             <div class="mdc-snackbar__surface">
                 <div class="mdc-snackbar__label" role="status" aria-live="polite">
                     The specified amount of data was wasted.
@@ -304,7 +351,7 @@
             </div>
         </div>
     </main>
-    <div role="progressbar" class="output--progress mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed" data-mdc-auto-init="MDCLinearProgress">
+    <div role="progressbar" class="output__progress mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed" data-mdc-auto-init="MDCLinearProgress">
         <div class="mdc-linear-progress__buffering-dots"></div>
         <div class="mdc-linear-progress__buffer"></div>
         <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
@@ -316,48 +363,52 @@
     </div>
 
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
-    <script src="https://unpkg.com/material-components-web@1.1.1/dist/material-components-web.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.0.0/material-components-web.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://unpkg.com/stopwatchjs@0.1.1/stopwatch.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/humanize-duration/3.18.0/humanize-duration.min.js"></script>
 
     <script>
+        "use strict";
+
         mdc.autoInit();
 
-        $(".option--mbs").hide();
+        $(".option__mbs").hide();
 
-        String.prototype.cycle = function(arr) {
-            var i = arr.indexOf(this.toString());
+        Array.prototype.cycle = function(str) {
+            var i = this.indexOf(str);
             if (i === -1) return undefined;
-            return arr[(i + 1) % arr.length];
+            return this[(i + 1) % this.length];
         };
 
         var handleTheme = function handleTheme() {
             switch (localStorage.getItem("theme")) {
                 case "light":
-                    $(".theme-toggle--svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z\"/><circle cx=\"12\" cy=\"12\" r=\"2.5\"/>");
+                    $(".theme-toggle__svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z\"/><circle cx=\"12\" cy=\"12\" r=\"2.5\"/>");
                     $("body").removeClass("setting--dark");
                     break;
 
                 case "dark":
-                    $(".theme-toggle--svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z\"/>");
+                    $(".theme-toggle__svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z\"/>");
                     $("body").addClass("setting--dark");
                     break;
 
                 default:
-                    $(".theme-toggle--svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M11 7l-3.2 9h1.9l.7-2h3.2l.7 2h1.9L13 7h-2zm-.15 5.65L12 9l1.15 3.65h-2.3zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48z\"/>");
+                    $(".theme-toggle__svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M11 7l-3.2 9h1.9l.7-2h3.2l.7 2h1.9L13 7h-2zm-.15 5.65L12 9l1.15 3.65h-2.3zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48z\"/>");
                     var hours = new Date().getHours();
                     $("body").toggleClass("setting--dark", hours <= 6 || hours >= 20 || window.matchMedia("(prefers-color-scheme: dark)").matches || window.matchMedia("(-ms-high-contrast: white-on-black)").matches);
             }
         };
 
-        if (!localStorage.getItem("theme")) localStorage.setItem("theme", "auto");
+        if (["auto", "light", "dark"].indexOf(localStorage.getItem("theme")) === -1) localStorage.setItem("theme", "auto");
         handleTheme();
         $("body").addClass("setting--animate-colours");
+
         $(".theme-toggle").click(function() {
-            localStorage.setItem("theme", localStorage.getItem("theme").cycle(["auto", "light", "dark"]));
+            localStorage.setItem("theme", ["auto", "light", "dark"].cycle(localStorage.getItem("theme")));
             handleTheme();
         });
+
         var stopwatch = new Stopwatch();
         var running = false;
         var wasted = 0;
@@ -366,37 +417,34 @@
         var time = 0;
         var goal = 0;
         var chunk = 800000;
-        var v = 2;
-        var int = null;
         var stopped = false;
         var speed = 0;
         var url = "";
 
         var getmbs = function getmbs() {
-            return $(".option--unlimited").get(0).MDCSwitch.checked ? 0 : parseInt($(".option--mbs").get(0).MDCTextField.value);
+            return $(".option__unlimited").get(0).MDCSwitch.checked ? 0 : parseInt($(".option__mbs").get(0).MDCTextField.value);
         };
 
         var download = function download(id) {
             if (xhr[id] && xhr[id].status == 200) {
                 wasted += chunk;
-                $(".output--byte").html(((0 | wasted * 100 / 1048576) / 100).toFixed(2));
-                speed = wasted / (new Date().getTime() - time) * 1000;
-                speed = (0 | speed * 100 / 1048576) / 100;
-                $(".output--speed").html(speed.toFixed(2));
+                $(".output__wasted").html(((0 | wasted * 100 / 1048576) / 100).toFixed(2));
+                speed = (0 | wasted / (new Date().getTime() - time) * 1000 * 100 / 1048576) / 100;
+                $(".output__speed").html(speed.toFixed(2));
 
-                if (getmbs() !== 0 && parseInt($(".output--byte").html()) / parseInt($(".option--mbs").get(0).MDCTextField.value) < 1.0) {
-                    $(".output--progress").get(0).MDCLinearProgress.progress = parseInt($(".output--byte").html()) / parseInt($(".option--mbs").get(0).MDCTextField.value);
+                if (getmbs() !== 0 && parseInt($(".output__wasted").html()) / parseInt($(".option__mbs").get(0).MDCTextField.value) < 1.0) {
+                    $(".output__progress").get(0).MDCLinearProgress.progress = parseInt($(".output__wasted").html()) / parseInt($(".option__mbs").get(0).MDCTextField.value);
                 } else {
-                    $(".output--progress").get(0).MDCLinearProgress.progress = 1.0;
+                    $(".output__progress").get(0).MDCLinearProgress.progress = 1.0;
                 }
 
                 if (goal !== 0 && wasted >= goal * 1048576) {
-                    $(".snackbar--done").get(0).MDCSnackbar.open();
+                    $(".snackbar__done").get(0).MDCSnackbar.open();
                     stop();
                 }
             }
 
-            if (running == true) xhr[id] = $.get("https://ros-static.ga/public/ros-data-waster-dummy?" + Math.random(), function() {
+            if (running == true) xhr[id] = $.get("https://ros-static.ga/public/ros-data-waster-dummy?".concat(Math.random()), function() {
                 return download(id);
             });
         };
@@ -405,20 +453,20 @@
 
         var start = function start() {
             stopwatch.reset();
-            $(".output--seconds").html("0 seconds");
+            $(".output__time").html("0 seconds");
             stopwatch.start();
             ticker = setInterval(function() {
-                return $(".output--seconds").html(humanizeDuration(stopwatch.value * 1000));
+                return $(".output__time").html(humanizeDuration(stopwatch.value * 1000));
             }, 1000);
-            threads = $(".option--threads").get(0).MDCSlider.value;
-            $(".option--mbs").get(0).MDCTextField.disabled = true;
-            $(".option--unlimited").get(0).MDCSwitch.disabled = true;
-            $(".option--threads").get(0).MDCSlider.disabled = true;
-            $(".option--unlimited").get(0).MDCSwitch.disabled = true;
-            $(".output--progress").get(0).MDCLinearProgress.determinate = getmbs() !== 0;
-            $(".output--progress").get(0).MDCLinearProgress.open();
-            $(".option--waste > .mdc-fab__label").html("Stop Wasting");
-            $(".option--waste > .mdc-fab__icon").html('<path fill="none" d="M0 0h24v24H0V0z"/><path d="M16 8v8H8V8h8m2-2H6v12h12V6z"/>');
+            threads = $(".option__threads").get(0).MDCSlider.value;
+            $(".option__mbs").get(0).MDCTextField.disabled = true;
+            $(".option__unlimited").get(0).MDCSwitch.disabled = true;
+            $(".option__threads").get(0).MDCSlider.disabled = true;
+            $(".option__unlimited").get(0).MDCSwitch.disabled = true;
+            $(".output__progress").get(0).MDCLinearProgress.determinate = getmbs() !== 0;
+            $(".output__progress").get(0).MDCLinearProgress.open();
+            $(".option__waste > .mdc-fab__label").html("Stop Wasting");
+            $(".option__waste > .mdc-fab__icon").html('<path fill="none" d="M0 0h24v24H0V0z"/><path d="M16 8v8H8V8h8m2-2H6v12h12V6z"/>');
             running = true;
             wasted = 0;
             xhr = [];
@@ -434,27 +482,27 @@
             stopwatch.stop();
             clearInterval(ticker);
             running = false;
-            document.querySelector(".option--mbs").MDCTextField.disabled = document.querySelector(".option--unlimited").MDCSwitch.checked;
-            $(".option--unlimited").get(0).MDCSwitch.disabled = false;
-            $(".option--threads").get(0).MDCSlider.disabled = false;
-            $(".output--progress").get(0).MDCLinearProgress.close();
-            $(".option--waste > .mdc-fab__label").html("Start Wasting");
-            $(".option--waste > .mdc-fab__icon").html('<path fill="none" d="M0 0h24v24H0V0z"/><path d="M10 8.64L15.27 12 10 15.36V8.64M8 5v14l11-7L8 5z"/>');
+            $(".option__mbs").get(0).MDCTextField.disabled = $(".option__unlimited").get(0).MDCSwitch.checked;
+            $(".option__unlimited").get(0).MDCSwitch.disabled = false;
+            $(".option__threads").get(0).MDCSlider.disabled = false;
+            $(".output__progress").get(0).MDCLinearProgress.close();
+            $(".option__waste > .mdc-fab__label").html("Start Wasting");
+            $(".option__waste > .mdc-fab__icon").html('<path fill="none" d="M0 0h24v24H0V0z"/><path d="M10 8.64L15.27 12 10 15.36V8.64M8 5v14l11-7L8 5z"/>');
         };
 
         var unlimitedChanged = function unlimitedChanged() {
-            var on = $(".option--unlimited").get(0).MDCSwitch.checked;
-            $(".option--mbs").get(0).MDCTextField.disabled = on;
-            $(".option--mbs").toggle(!on);
-            document.querySelector(".output--progress").MDCLinearProgress.determinate = !on;
+            var on = $(".option__unlimited").get(0).MDCSwitch.checked;
+            $(".option__mbs").toggle(!on);
+            $(".output__progress").get(0).MDCLinearProgress.determinate = !on;
         };
 
-        $(".option--unlimited").get(0).MDCSwitch.listen("change", function() {
+        $(".option__unlimited").get(0).MDCSwitch.listen("change", function() {
             return unlimitedChanged();
         });
-        $(".option--waste").click(function() {
-            if ($(".option--mbs").get(0).MDCTextField.value === "") {
-                $(".option--unlimited").get(0).MDCSwitch.checked = true;
+
+        $(".option__waste").click(function() {
+            if ($(".option__mbs").get(0).MDCTextField.value === "") {
+                $(".option__unlimited").get(0).MDCSwitch.checked = true;
                 unlimitedChanged();
             }
 
