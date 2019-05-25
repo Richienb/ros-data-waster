@@ -13,7 +13,7 @@
 
     <link rel="shortcut icon" href="favicon.ico">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.1.0/material-components-web.min.css" integrity="sha256-0tWLyEFn/16aLK6I6vMEhFwmyvu7HpAOZSJrLpHuDSw=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.2.0/material-components-web.min.css" integrity="sha256-+OfX0WMENTNTLxAwAL4aMGymbkfR84uuXohW9Grkm9I=" crossorigin="anonymous" />
 
     <style>
         body {
@@ -67,16 +67,16 @@
         }
         
         body .main-content a {
-            color: #3f51b5;
+            color: var(--mdc-theme-primary, #6200ee);
         }
         
         body .main-content::-moz-selection {
-            background-color: #3f51b5;
+            background-color: var(--mdc-theme-primary, #6200ee);
             color: white;
         }
         
         body .main-content::selection {
-            background-color: #3f51b5;
+            background-color: var(--mdc-theme-primary, #6200ee);
             color: white;
         }
         
@@ -161,6 +161,10 @@
             background-color: #303030;
         }
         
+        body.setting--dark .mdc-linear-progress__buffer {
+            background-color: #404040;
+        }
+        
         body.setting--dark .mdc-select__selected-text,
         body.setting--dark .mdc-text-field__input,
         body.setting--dark .mdc-floating-label,
@@ -172,10 +176,6 @@
         body.setting--dark .mdc-notched-outline__notch,
         body.setting--dark .mdc-notched-outline__trailing {
             border-color: white !important;
-        }
-        
-        body.setting--dark .mdc-linear-progress__buffer {
-            background-color: #404040;
         }
         
         body.setting--dark a {
@@ -363,45 +363,48 @@
     </div>
 
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js" integrity="sha256-1eSvllkLdrfxD6G8RGF9h+mQuD93Af5+GdPBMNc7uMQ=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.1.0/material-components-web.min.js" integrity="sha256-hx+OuLXG17rlfYtQfl7Iv5D4cvRnZTFTGVChG0QIk3Q=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.2.0/material-components-web.min.js" integrity="sha256-hx+OuLXG17rlfYtQfl7Iv5D4cvRnZTFTGVChG0QIk3Q=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/stopwatchjs@0.1.1/stopwatch.min.js" integrity="sha384-YVHQrJc4DzNQAtLqXkQ+16NBc9BuQSEWt5At/0hgASbDJ+659CMhYJeuh2EHtqJ8" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/humanize-duration/3.18.0/humanize-duration.min.js" integrity="sha256-B4d6gn8JWG9bLA/W73tmf85KPftqDevyvKOJPSu28o8=" crossorigin="anonymous"></script>
 
     <script>
-        "use strict";
-
         mdc.autoInit();
 
         $(".option__mbs").hide();
 
         Array.prototype.cycle = function(str) {
             var i = this.indexOf(str);
-            if (i === -1) return undefined;
+            if (i === -1)
+                return undefined;
             return this[(i + 1) % this.length];
         };
 
-        var handleTheme = function handleTheme() {
+        var handleTheme = function() {
             switch (localStorage.getItem("theme")) {
                 case "light":
                     $(".theme-toggle__svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z\"/><circle cx=\"12\" cy=\"12\" r=\"2.5\"/>");
                     $("body").removeClass("setting--dark");
                     break;
-
                 case "dark":
                     $(".theme-toggle__svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48zM12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z\"/>");
                     $("body").addClass("setting--dark");
                     break;
-
                 default:
                     $(".theme-toggle__svg").html("<path fill=\"none\" d=\"M0 0h24v24H0V0z\"/><path d=\"M11 7l-3.2 9h1.9l.7-2h3.2l.7 2h1.9L13 7h-2zm-.15 5.65L12 9l1.15 3.65h-2.3zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69zm-2 5.79V18h-3.52L12 20.48 9.52 18H6v-3.52L3.52 12 6 9.52V6h3.52L12 3.52 14.48 6H18v3.52L20.48 12 18 14.48z\"/>");
                     var hours = new Date().getHours();
-                    $("body").toggleClass("setting--dark", hours <= 6 || hours >= 20 || window.matchMedia("(prefers-color-scheme: dark)").matches || window.matchMedia("(-ms-high-contrast: white-on-black)").matches);
+                    $("body").toggleClass("setting--dark", hours <= 6 ||
+                        hours >= 20 ||
+                        window.matchMedia("(prefers-color-scheme: dark)").matches ||
+                        window.matchMedia("(-ms-high-contrast: white-on-black)").matches);
             }
+
         };
 
-        if (["auto", "light", "dark"].indexOf(localStorage.getItem("theme")) === -1) localStorage.setItem("theme", "auto");
+        if (["auto", "light", "dark"].indexOf(localStorage.getItem("theme")) === -1)
+            localStorage.setItem("theme", "auto");
         handleTheme();
+
         $("body").addClass("setting--animate-colours");
 
         $(".theme-toggle").click(function() {
@@ -421,37 +424,51 @@
         var speed = 0;
         var url = "";
 
-        var getmbs = function getmbs() {
-            return $(".option__unlimited").get(0).MDCSwitch.checked ? 0 : parseInt($(".option__mbs").get(0).MDCTextField.value);
+        var getmbs = function() {
+            return $(".option__unlimited").get(0).MDCSwitch.checked ?
+                0 :
+                parseInt($(".option__mbs").get(0).MDCTextField.value);
         };
 
-        var download = function download(id) {
+        var download = function(id) {
             if (xhr[id] && xhr[id].status == 200) {
                 wasted += chunk;
                 $(".output__wasted").html(((0 | wasted * 100 / 1048576) / 100).toFixed(2));
-                speed = (0 | wasted / (new Date().getTime() - time) * 1000 * 100 / 1048576) / 100;
+                speed =
+                    (0 |
+                        wasted / (
+                            new Date().getTime() - time) *
+                        1000 *
+                        100 /
+                        1048576) /
+                    100;
                 $(".output__speed").html(speed.toFixed(2));
-
-                if (getmbs() !== 0 && parseInt($(".output__wasted").html()) / parseInt($(".option__mbs").get(0).MDCTextField.value) < 1.0) {
-                    $(".output__progress").get(0).MDCLinearProgress.progress = parseInt($(".output__wasted").html()) / parseInt($(".option__mbs").get(0).MDCTextField.value);
+                if (getmbs() !== 0 &&
+                    parseInt($(".output__wasted").html()) /
+                    parseInt($(".option__mbs").get(0).MDCTextField.value) <
+                    1.0) {
+                    $(".output__progress").get(0).MDCLinearProgress.progress =
+                        parseInt($(".output__wasted").html()) /
+                        parseInt($(".option__mbs").get(0).MDCTextField.value);
                 } else {
                     $(".output__progress").get(0).MDCLinearProgress.progress = 1.0;
                 }
-
                 if (goal !== 0 && wasted >= goal * 1048576) {
-                    $(".snackbar__done").get(0).MDCSnackbar.open();
+                    $(".snackbar__done").
+                    get(0).
+                    MDCSnackbar.open();
                     stop();
                 }
             }
-
-            if (running == true) xhr[id] = $.get("https://ros-static.ga/public/ros-data-waster-dummy?".concat(Math.random()), function() {
-                return download(id);
-            });
+            if (running == true)
+                xhr[id] = $.get("https://ros-static.ga/public/ros-data-waster-dummy?" + Math.random(), function() {
+                    return download(id);
+                });
         };
 
         var ticker;
 
-        var start = function start() {
+        var start = function() {
             stopwatch.reset();
             $(".output__time").html("0 seconds");
             stopwatch.start();
@@ -463,8 +480,11 @@
             $(".option__unlimited").get(0).MDCSwitch.disabled = true;
             $(".option__threads").get(0).MDCSlider.disabled = true;
             $(".option__unlimited").get(0).MDCSwitch.disabled = true;
-            $(".output__progress").get(0).MDCLinearProgress.determinate = getmbs() !== 0;
-            $(".output__progress").get(0).MDCLinearProgress.open();
+            $(".output__progress").get(0).MDCLinearProgress.determinate =
+                getmbs() !== 0;
+            $(".output__progress").
+            get(0).
+            MDCLinearProgress.open();
             $(".option__waste > .mdc-fab__label").html("Stop Wasting");
             $(".option__waste > .mdc-fab__icon").html('<path fill="none" d="M0 0h24v24H0V0z"/><path d="M16 8v8H8V8h8m2-2H6v12h12V6z"/>');
             running = true;
@@ -472,31 +492,33 @@
             xhr = [];
             time = new Date().getTime();
             goal = getmbs();
-
-            for (var i = 0; i < threads; i++) {
-                download(i);
-            }
+            for (var i = 0; i < threads; i++) download(i);
         };
 
-        var stop = function stop() {
+        var stop = function() {
             stopwatch.stop();
             clearInterval(ticker);
             running = false;
             $(".option__mbs").get(0).MDCTextField.disabled = $(".option__unlimited").get(0).MDCSwitch.checked;
             $(".option__unlimited").get(0).MDCSwitch.disabled = false;
             $(".option__threads").get(0).MDCSlider.disabled = false;
-            $(".output__progress").get(0).MDCLinearProgress.close();
+            $(".output__progress").
+            get(0).
+            MDCLinearProgress.close();
             $(".option__waste > .mdc-fab__label").html("Start Wasting");
             $(".option__waste > .mdc-fab__icon").html('<path fill="none" d="M0 0h24v24H0V0z"/><path d="M10 8.64L15.27 12 10 15.36V8.64M8 5v14l11-7L8 5z"/>');
         };
 
-        var unlimitedChanged = function unlimitedChanged() {
+        var unlimitedChanged = function() {
             var on = $(".option__unlimited").get(0).MDCSwitch.checked;
             $(".option__mbs").toggle(!on);
+            $(".option__mbs").get(0).MDCTextField.disabled = on;
             $(".output__progress").get(0).MDCLinearProgress.determinate = !on;
         };
 
-        $(".option__unlimited").get(0).MDCSwitch.listen("change", function() {
+        $(".option__unlimited").
+        get(0).
+        MDCSwitch.listen("change", function() {
             return unlimitedChanged();
         });
 
@@ -505,7 +527,6 @@
                 $(".option__unlimited").get(0).MDCSwitch.checked = true;
                 unlimitedChanged();
             }
-
             if (running === false && stopped === false) start();
             else if (stopped === false) stop();
         });
