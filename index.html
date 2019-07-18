@@ -13,7 +13,7 @@
 
     <link rel="shortcut icon" href="favicon.ico">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.2.0/material-components-web.min.css" integrity="sha256-+OfX0WMENTNTLxAwAL4aMGymbkfR84uuXohW9Grkm9I=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/3.0.0/material-components-web.min.css" integrity="sha256-sljrYCrrEK55ECAXF6gHxng8RLXHZYpsblwhH4P7bsM=" crossorigin="anonymous" />
 
     <style>
         body {
@@ -146,19 +146,19 @@
         }
         
         body.setting--dark {
-            background-color: #212121 !important;
+            background-color: #121212 !important;
             --mdc-theme-text-primary-on-background: white;
             --mdc-theme-text-secondary-on-background: white;
             --mdc-theme-text-icon-on-background: white;
         }
         
         body.setting--dark::-webkit-scrollbar {
-            background-color: #505050;
+            background-color: #424242;
         }
         
         body.setting--dark .main-content {
             color: white;
-            background-color: #303030;
+            background-color: #212121;
         }
         
         body.setting--dark .mdc-linear-progress__buffer {
@@ -318,8 +318,8 @@
                     <path d="M13 2.05v3.03c3.39.49 6 3.39 6 6.92 0 .9-.18 1.75-.48 2.54l2.6 1.53c.56-1.24.88-2.62.88-4.07 0-5.18-3.95-9.45-9-9.95zM12 19c-3.87 0-7-3.13-7-7 0-3.53 2.61-6.43 6-6.92V2.05c-5.06.5-9 4.76-9 9.95 0 5.52 4.47 10 9.99 10 3.31 0 6.24-1.61 8.06-4.09l-2.6-1.53C16.17 17.98 14.21 19 12 19z" />
                 </svg>
                 <span class="mdc-list-item__text">
-      <span class="mdc-list-item__primary-text">Megabytes wasted</span>
-                <span class="mdc-list-item__secondary-text"><span class="output__wasted">0.00</span> Mbs</span>
+      <span class="mdc-list-item__primary-text">Data wasted</span>
+                <span class="mdc-list-item__secondary-text output__wasted">0.00 MB</span>
                 </span>
             </li>
             <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
@@ -329,7 +329,7 @@
                 </svg>
                 <span class="mdc-list-item__text">
       <span class="mdc-list-item__primary-text">Data wasted per second</span>
-                <span class="mdc-list-item__secondary-text"><span class="output__speed">0.00</span> Mbs/s</span>
+                <span class="mdc-list-item__secondary-text"><span class="output__speed">0.00 MB</span>/s</span>
                 </span>
             </li>
             <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
@@ -363,10 +363,11 @@
     </div>
 
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js" integrity="sha256-1eSvllkLdrfxD6G8RGF9h+mQuD93Af5+GdPBMNc7uMQ=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/2.2.0/material-components-web.min.js" integrity="sha256-hx+OuLXG17rlfYtQfl7Iv5D4cvRnZTFTGVChG0QIk3Q=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/material-components-web/3.0.0/material-components-web.min.js" integrity="sha256-EsosgypLTQhhyhYTy8y+WbACaQsmG2Tpvoq1186sISE=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/stopwatchjs@0.1.1/stopwatch.min.js" integrity="sha384-YVHQrJc4DzNQAtLqXkQ+16NBc9BuQSEWt5At/0hgASbDJ+659CMhYJeuh2EHtqJ8" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/humanize-duration/3.18.0/humanize-duration.min.js" integrity="sha256-B4d6gn8JWG9bLA/W73tmf85KPftqDevyvKOJPSu28o8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/humanize-duration/3.20.0/humanize-duration.min.js" integrity="sha256-/Z/Xzo8lduQxHd+muddFmswME6zBTWH+UGYdNEE0upo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/filesize/4.1.2/filesize.min.js" integrity="sha256-znN6cqu0LRpYU05qFKU85KS24giwC5kI6KTtLypmans=" crossorigin="anonymous"></script>
 
     <script>
         mdc.autoInit();
@@ -404,9 +405,7 @@
         if (["auto", "light", "dark"].indexOf(localStorage.getItem("theme")) === -1)
             localStorage.setItem("theme", "auto");
         handleTheme();
-
         $("body").addClass("setting--animate-colours");
-
         $(".theme-toggle").click(function() {
             localStorage.setItem("theme", ["auto", "light", "dark"].cycle(localStorage.getItem("theme")));
             handleTheme();
@@ -421,8 +420,15 @@
         var goal = 0;
         var chunk = 800000;
         var stopped = false;
-        var speed = 0;
-        var url = "";
+        var formatSize = function(size) {
+            var o = filesize(size, {
+                locale: true,
+                output: "object"
+            });
+
+            window.o = o;
+            return (+o.value).toFixed(2) + " " + o.symbol;
+        };
 
         var getmbs = function() {
             return $(".option__unlimited").get(0).MDCSwitch.checked ?
@@ -433,16 +439,8 @@
         var download = function(id) {
             if (xhr[id] && xhr[id].status == 200) {
                 wasted += chunk;
-                $(".output__wasted").html(((0 | wasted * 100 / 1048576) / 100).toFixed(2));
-                speed =
-                    (0 |
-                        wasted / (
-                            new Date().getTime() - time) *
-                        1000 *
-                        100 /
-                        1048576) /
-                    100;
-                $(".output__speed").html(speed.toFixed(2));
+                $(".output__wasted").html(formatSize((0 | wasted * 100 / 1048576) * 1e+4));
+                $(".output__speed").html(formatSize((0 | wasted / (new Date().getTime() - time) * 100000 / 1048576) * 1e+4));
                 if (getmbs() !== 0 &&
                     parseInt($(".output__wasted").html()) /
                     parseInt($(".option__mbs").get(0).MDCTextField.value) <
