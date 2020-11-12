@@ -458,7 +458,7 @@
                 }
             }
             if (running == true)
-                xhr[id] = $.get("https://ros-static.ga/public/ros-data-waster-dummy?" + Math.random(), function() {
+                xhr[id] = $.get("https://raw.githubusercontent.com/Richienb/ros-static/master/public/ros-data-waster-dummy?" + Math.random(), function() {
                     return download(id);
                 });
         };
