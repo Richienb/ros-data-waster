@@ -268,7 +268,7 @@
             <div class="mdc-switch__track"></div>
             <div class="mdc-switch__thumb-underlay">
                 <div class="mdc-switch__thumb">
-                    <input type="checkbox" class="mdc-switch__native-control" role="switch" checked>
+                    <input type="checkbox" class="mdc-switch__native-control" id="option--unlimited-input" role="switch" checked>
                 </div>
             </div>
         </div>
@@ -283,6 +283,17 @@
                 <div class="mdc-notched-outline__trailing"></div>
             </div>
         </div>
+        <br>
+        <br>
+        <div class="option__iec mdc-switch mdc-switch" data-mdc-auto-init="MDCSwitch">
+            <div class="mdc-switch__track"></div>
+            <div class="mdc-switch__thumb-underlay">
+                <div class="mdc-switch__thumb">
+                    <input type="checkbox" class="mdc-switch__native-control" id="option--iec-input" role="switch">
+                </div>
+            </div>
+        </div>
+        <label class="mdc-switch__label" for="option--iec-input">Use IEC output (1024 Byte = 1 Kibibyte)</label>
         <br>
         <br>
         <p class="option__threads-title mdc-typography--body2">Download threads (higher is for faster wasting, lower is for more precision)</p>
@@ -329,7 +340,7 @@
                 </svg>
                 <span class="mdc-list-item__text">
       <span class="mdc-list-item__primary-text">Data wasted per second</span>
-                <span class="mdc-list-item__secondary-text"><span class="output__speed">0.00 MB</span>/s</span>
+                <span class="mdc-list-item__secondary-text"><span class="output__speed-mb">0.00 MB</span>/s<br><span class="output__speed-mbit">0.00 MBit</span>/s</span>
                 </span>
             </li>
             <li class="mdc-list-item" data-mdc-auto-init="MDCRipple">
@@ -419,14 +430,17 @@
         var goal = 0;
         var chunk = 800000;
         var stopped = false;
-        var formatSize = function(size) {
+        var formatSize = function(size, bits=false) {
+            var useIec = $(".option__iec").get(0).MDCSwitch.checked;
             var o = filesize(size, {
                 locale: true,
-                output: "object"
+                output: "object",
+                bits: bits,
+                standard: (useIec) ? "iec" : "jedec",
             });
 
             window.o = o;
-            return (+o.value).toFixed(2) + " " + o.symbol;
+            return o.value + " " + o.symbol;
         };
 
         var getmbs = function() {
@@ -439,7 +453,8 @@
             if (xhr[id] && xhr[id].status == 200) {
                 wasted += chunk;
                 $(".output__wasted").html(formatSize((0 | wasted * 100 / 1048576) * 1e+4));
-                $(".output__speed").html(formatSize((0 | wasted / (new Date().getTime() - time) * 100000 / 1048576) * 1e+4));
+                $(".output__speed-mb").html(formatSize((0 | wasted / (new Date().getTime() - time) * 100000 / 1048576) * 1e+4));
+                $(".output__speed-mbit").html(formatSize((0 | wasted / (new Date().getTime() - time) * 100000 / 1048576) * 1e+4, true));
                 if (getmbs() !== 0 &&
                     parseInt($(".output__wasted").html()) /
                     parseInt($(".option__mbs").get(0).MDCTextField.value) <
