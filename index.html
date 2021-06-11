@@ -438,7 +438,7 @@
             if (xhr[id] && xhr[id].status == 200) {
                 wasted += chunk;
                 $(".output__wasted").html(formatSize(wasted));
-                $(".output__speed").html(formatSize(wasted / (new Date().getTime() - time)));
+                $(".output__speed").html(formatSize(wasted / ((new Date().getTime() / 1000) - (time / 1000))));
                 if (getmbs() !== 0 &&
                     parseInt($(".output__wasted").html()) /
                     parseInt($(".option__mbs").get(0).MDCTextField.value) <
