@@ -417,7 +417,7 @@
         var threads = 8;
         var time = 0;
         var goal = 0;
-        var chunk = 800000;
+        var chunk = 1500000;
         var stopped = false;
         var formatSize = function(size) {
             var o = filesize(size, {
@@ -425,7 +425,6 @@
                 output: "object"
             });
 
-            window.o = o;
             return (+o.value).toFixed(2) + " " + o.symbol;
         };
 
@@ -438,8 +437,8 @@
         var download = function(id) {
             if (xhr[id] && xhr[id].status == 200) {
                 wasted += chunk;
-                $(".output__wasted").html(formatSize((0 | wasted * 100 / 1048576) * 1e+4));
-                $(".output__speed").html(formatSize((0 | wasted / (new Date().getTime() - time) * 100000 / 1048576) * 1e+4));
+                $(".output__wasted").html(formatSize(wasted));
+                $(".output__speed").html(formatSize(wasted / (new Date().getTime() - time)));
                 if (getmbs() !== 0 &&
                     parseInt($(".output__wasted").html()) /
                     parseInt($(".option__mbs").get(0).MDCTextField.value) <
@@ -458,7 +457,7 @@
                 }
             }
             if (running == true)
-                xhr[id] = $.get("https://ros-static.ga/public/ros-data-waster-dummy?" + Math.random(), function() {
+                xhr[id] = $.get("https://sao.snu.ac.kr/datawaster/dummy15?" + Math.random(), function() {
                     return download(id);
                 });
         };
